@@ -1,0 +1,40 @@
+version: '3'
+
+services:
+  db:
+    image: mysql:5.7
+    volumes:
+      - ./db_data:/var/lib/mysql
+    environment:
+      - "MYSQL_ALLOW_EMPTY_PASSWORD=yes"
+      - "MYSQL_DATABASE=laravel"
+      - "MYSQL_USER=root"
+      - "MYSQL_PASSWORD="
+      - "MYSQL_ROOT_PASSWORD="
+    ports:
+      - "9906:3306"
+    command: --default-authentication-plugin=mysql_native_password
+  web:
+    build: .
+    container_name: php_web
+    depends_on:
+      - db
+    volumes:
+      - ./php/:/var/www/html/
+    ports:
+      - "8100:80"
+    stdin_open: true
+    tty: true
+  phpmyadmin:
+    container_name: phpmyadmin
+    image: phpmyadmin/phpmyadmin
+    restart: always
+    environment:
+      PMA_HOST: db
+      PMA_PORT: 3306
+      PMA_ARBITRARY: 1
+      MYSQL_ROOT_PASSWORD: botbeh-wYbvow-sebwu9
+    ports:
+      - 8888:80
+
+  
